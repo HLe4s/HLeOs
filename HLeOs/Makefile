@@ -12,4 +12,7 @@ all : $(TARGET)
 	cargo bootimage $(Z_FLAGS) --target $(TARGET)
 
 run : $(KERNEL_DIR)
-	qemu-system-x86_64 -drive format=raw,file=$(KERNEL_DIR)
+	qemu-system-x86_64 -drive format=raw,file=$(KERNEL_DIR) -nographic
+
+gdb : $(KERNEL_DIR)
+	qemu-system-x86_64 -drive format=raw,file=$(KERNEL_DIR) -nographic -s -S
