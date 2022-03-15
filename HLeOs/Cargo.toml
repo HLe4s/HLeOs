@@ -12,3 +12,4 @@ panic = "abort"
 panic = "abort"
 
 [dependencies]
+bootloader = "0.9.8"
