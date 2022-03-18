@@ -2,6 +2,7 @@
 #![no_main] // disable all Rust-level entry points
 
 use core::panic::PanicInfo;
+mod hleos;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -14,6 +15,8 @@ pub extern "C" fn _start() -> ! {
             *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
         }
     }
+
+    let vga : &hleos::vga::Vga_handle;
     
     loop{}
 }
