@@ -18,11 +18,62 @@ pub extern "C" fn _start() -> ! {
 
     for _i in 0..100000000 {}
 
-    let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
-
-    vga.clear();
+	print_test();
     
     loop{}
+}
+
+fn print_test() {
+   let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+
+    vga.clear();
+
+    vga.print_char(b'x');
+    vga.print_char(b'y');
+    vga.print_char(b'z');
+
+    for _i in 0..10000000 {}
+
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+
+    vga.print_char(b'H');
+    for _i in 0..10000000 {}
+    vga.print_char(b'e');
+    for _i in 0..10000000 {}
+    vga.print_char(b'l');
+    for _i in 0..10000000 {}
+    vga.print_char(b'l');
+    for _i in 0..10000000 {}
+    vga.print_char(b'o');
+    for _i in 0..10000000 {}
+    vga.print_char(b'\n');
+    for _i in 0..10000000 {}
+    vga.print_char(b'w');
+    for _i in 0..10000000 {}
+    vga.print_char(b'o');
+    for _i in 0..10000000 {}
+    vga.print_char(b'r');
+    for _i in 0..10000000 {}
+    vga.print_char(b'l');
+    for _i in 0..10000000 {}
+    vga.print_char(b'd');
+    for _i in 0..10000000 {}
+    vga.print_char(b'!');
+    for _i in 0..10000000 {}
+    vga.print_char(b'\n');
+    for _i in 0..10000000 {}
+
+    vga.print_line(b"Hello, This is my HLeOs. \n");
+    for _i in 0..100000000 {}
+    vga.delete_char();
+    vga.delete_line();
+    for _i in 0..10000000 {}
+    vga.print_line(b"Hello, This is my HLeOs. \n");
 }
 
 /// This function is called on panic.
