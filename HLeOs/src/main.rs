@@ -88,7 +88,8 @@ fn print_test() {
     vga.print_line(b"Hello, This is my HLeOs. \n");
     vga.print_line(b"I'm working on 3rd Chapter about printing something! \n");
     vga.print_line(b"Visit my github, and blog for more information! \n");
-    vga.print_line(b"Visit my github, and blog for more information! \n");
+    vga.print_line(b"github : https://github.com/HLe4s/HLeOs \n");
+    vga.print_line(b"blog : https://www.hacking-yi.kro.kr \n");
 }
 
 /// This function is called on panic.
