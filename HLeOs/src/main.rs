@@ -24,7 +24,7 @@ pub extern "C" fn _start() -> ! {
 }
 
 fn print_test() {
-   let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+    let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
 
     vga.clear();
 
@@ -68,12 +68,27 @@ fn print_test() {
     vga.print_char(b'\n');
     for _i in 0..10000000 {}
 
-    vga.print_line(b"Hello, This is my HLeOs. \n");
+    vga.print_line(b"Q : What is... ");
+    vga.print_number(854952);
+    vga.print_line(b" plus ");
+    vga.print_number(32432);
+    vga.print_char(b'?');
+    for _i in 0..10000000 {}
+    vga.print_char(b'\n');
+    vga.print_line(b"A : ");
+    vga.print_number(854952 + 32432);
+    vga.print_line(b", sir. \n");
+    for _i in 0..100000000 {}
+
+    vga.print_line(b"Hello, I love study about computer science espicially, Operating system!!\n");
     for _i in 0..100000000 {}
     vga.delete_char();
     vga.delete_line();
     for _i in 0..10000000 {}
     vga.print_line(b"Hello, This is my HLeOs. \n");
+    vga.print_line(b"I'm working on 3rd Chapter about printing something! \n");
+    vga.print_line(b"Visit my github, and blog for more information! \n");
+    vga.print_line(b"Visit my github, and blog for more information! \n");
 }
 
 /// This function is called on panic.

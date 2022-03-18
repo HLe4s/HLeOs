@@ -98,6 +98,19 @@ impl VgaHandle {
         }
     }
 
+    pub fn print_number(&self, num : i32) {
+        let mut n = num;
+        if n < 0 {
+            self.print_char(b'-');
+            n *= -1;
+        }
+
+        if n / 10 != 0 {
+            self.print_number(n / 10);
+        }
+        self.print_char(b'0' + (n % 10) as u8);
+    }
+
     pub fn print_line(&self, s : &[u8]) {
        if self.valid_cursor() {
 			for (i, &byte) in s.iter().enumerate() {
