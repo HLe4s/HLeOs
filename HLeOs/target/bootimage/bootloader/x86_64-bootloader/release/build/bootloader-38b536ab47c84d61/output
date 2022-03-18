@@ -1,7 +1,0 @@
-cargo:rerun-if-changed=/home/asss8593/lab/HLeOs/HLeOs/Cargo.toml
-cargo:rustc-link-search=native=/home/asss8593/lab/HLeOs/HLeOs/target/bootimage/bootloader/x86_64-bootloader/release/build/bootloader-38b536ab47c84d61/out
-cargo:rustc-link-lib=static=kernel_bin-HLeOs
-cargo:rerun-if-env-changed=KERNEL
-cargo:rerun-if-env-changed=KERNEL_MANIFEST
-cargo:rerun-if-changed=/home/asss8593/lab/HLeOs/HLeOs/target/x86_64-HLeos/debug/HLeOs
-cargo:rerun-if-changed=build.rs
