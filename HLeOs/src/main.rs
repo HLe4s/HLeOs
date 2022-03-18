@@ -16,7 +16,11 @@ pub extern "C" fn _start() -> ! {
         }
     }
 
-    let vga : &hleos::vga::Vga_handle;
+    for _i in 0..100000000 {}
+
+    let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+
+    vga.clear();
     
     loop{}
 }
