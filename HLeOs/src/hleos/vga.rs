@@ -29,8 +29,16 @@ impl VgaHandle {
             true
         } else {
             if self.y > 0 {
+                let mut vga_buffer = 0xb8000 as *mut u8;
                 self.y = self.y - 1;
-                self.x = 79;
+                for i in (0..80).rev() {
+                    unsafe {
+                        if *vga_buffer.offset(i as isize * 2 + self.y as isize * 160) != 0x00 {
+                            self.x = i;
+                            break;
+                        }
+                    }
+                }
                 true
             } else {
                 false
@@ -117,6 +125,12 @@ impl VgaHandle {
 				self.print_char(byte);
 		    }	
         } 
+    }
+
+    pub fn print_str(&self, s : &str) {
+		if self.valid_cursor() {
+			self.print_line(s.as_bytes());
+        }
     }
 
     pub fn delete_line(&self) {

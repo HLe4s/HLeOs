@@ -3,21 +3,10 @@
 
 use core::panic::PanicInfo;
 mod hleos;
+mod std;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    static HELLO: &[u8] = b"Hello World!";
-    let vga_buffer = 0xb8000 as *mut u8;
-
-    for (i, &byte) in HELLO.iter().enumerate() {
-        unsafe {
-            *vga_buffer.offset(i as isize * 2) = byte;
-            *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-        }
-    }
-
-    for _i in 0..100000000 {}
-
 	print_test();
     
     loop{}
@@ -90,10 +79,34 @@ fn print_test() {
     vga.print_line(b"Visit my github, and blog for more information! \n");
     vga.print_line(b"github : https://github.com/HLe4s/HLeOs \n");
     vga.print_line(b"blog : https://www.hacking-yi.kro.kr \n");
+
+    println!("hello ~", 3240);
+    println!(10, " + ", 324, " = ", 10 + 324);
+    vga.delete_char();
+    vga.delete_line();
+    println!();
+    println!(10, " + ", 324, " = ", 10 + 324);
+    vga.print_line(b"HAHAHAHAH, Hello, I love study about computer science espicially, Operating system!!\n");
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
+    vga.delete_char();
+    for _i in 0..10000000 {}
 }
 
 /// This function is called on panic.
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
+    let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+    vga.print_line(b"Panic_eccured!!\n");
     loop {}
 }
