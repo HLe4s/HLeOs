@@ -7,8 +7,11 @@ mod std;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-	print_test();
-    
+    print_test();
+
+    println!("\nHello my name is Kang ChanU\n", "my student number is : ", 202020696);
+    println!("yes you are my friend too!");
+
     loop{}
 }
 
@@ -80,7 +83,6 @@ fn print_test() {
     vga.print_line(b"github : https://github.com/HLe4s/HLeOs \n");
     vga.print_line(b"blog : https://www.hacking-yi.kro.kr \n");
 
-    println!("hello ~", 3240);
     println!(10, " + ", 324, " = ", 10 + 324);
     vga.delete_char();
     vga.delete_line();

@@ -39,3 +39,11 @@ macro_rules! println {
         std::io::next_line();
     };
 }
+#[macro_export]
+macro_rules! print {
+    ($($arg:expr), *)=> {
+        $(
+            crate::std::io::vs_println(&$arg);
+        )*
+    };
+}
