@@ -33,11 +33,11 @@ gdb-i386 : $(IMAGE_DIR)
 
 debug-loader : $(GDB_SCRIPT)
 	gdb -ix $(GDB_SCRIPT) \
-		-ex 'symbol $(BOOTLOADER_DIR)' \
 		-ex 'set tdesc filename target.xml' \
 		-ex 'target remote localhost:1234' \
 		-ex 'hb *0x7c00' \
-		-ex 'continue'
+		-ex 'continue' \
+		-ex 'symbol $(BOOTLOADER_DIR)'
 debug :
 	gdb -ex 'file $(KERNEL_DIR)' \
 		-ex 'target remote:1234' \
