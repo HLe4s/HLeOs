@@ -17,6 +17,7 @@ x86_64로 하면 에러가 났기 때문이다. 그래서 어쩔 수 없지만, 
 2. 한 쪽에서는 "make ; make gdb-i386"을 입력하자.
 3. 다른 한 쪽에서는 "make debug-loader"를 입력하자.
 4. 디버깅하자. 심볼이 안뜨는데, file 명령어를 치면 깨지더라;;
+ ++ symbol 명령어 쓰면 심볼 생긴다.
 
 [en] you can find two rules in Makefile, 'gdb-i386', 'debug-loader' this two rules are used to debug the boot loader in real mode.
 I made 'gdb-i386' because, when I debug boot loader in realmode, It makes an error to use 'qemu-system-x86_64'
@@ -27,3 +28,4 @@ How to debug loader
 2. in one, type "make ; make gdb-i386"
 3. in another, type "make debug-loader"
 4. debug ! # file command makes error :(
+ ++ you can make symbol by using 'symbol' command
