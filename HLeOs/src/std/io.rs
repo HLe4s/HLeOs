@@ -11,6 +11,13 @@ impl PrintLn for i32 {
     }
 }
 
+impl PrintLn for u8 {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_char(*self);
+    }
+}
+
 impl PrintLn for &'static str {
     fn print(&self) {
         let vga : &vga::VgaHandle = vga::get_vga_handle();

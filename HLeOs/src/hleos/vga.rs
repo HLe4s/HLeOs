@@ -33,7 +33,7 @@ impl VgaHandle {
                 self.y = self.y - 1;
                 for i in (0..80).rev() {
                     unsafe {
-                        if *vga_buffer.offset(i as isize * 2 + self.y as isize * 160) != 0x00 {
+                        if *vga_buffer.offset(i as isize * 2 + self.y as isize * 160) != 0x00 || i == 0 {
                             self.x = i;
                             break;
                         }

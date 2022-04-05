@@ -7,12 +7,37 @@ mod std;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    unsafe {
+        let mut page = 0x40b0 as *mut u64;
+        *page = 0x409003;
+
+        page = 0x40b8 as *mut u64;
+        *page = 0x406003;
+
+        page = 0x40c0 as *mut u64;
+        *page = 0x407003;
+
+        page = 0x40c8 as *mut u64;
+        *page = 0x408003;
+
+        page = 0x40d0 as *mut u64;
+        *page = 0x40a003;
+    }
+
     print_test();
 
     println!("\nHello my name is Kang ChanU\n", "my student number is : ", 202020696);
     println!("yes you are my friend too!");
 
-    loop{}
+    loop{
+        let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+        let ch : u8 = hleos::iostream::getchar();
+        if ch == b'*' {
+            vga.delete_char();
+            continue;
+        }
+        print!(ch);
+    }
 }
 
 fn print_test() {

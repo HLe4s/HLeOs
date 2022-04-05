@@ -25,7 +25,7 @@ run : $(IMAGE_DIR)
 
 gdb : $(IMAGE_DIR)
 	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
-	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -s -S
+	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -s -S 
 
 gdb-i386 : $(IMAGE_DIR)
 	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
@@ -36,13 +36,23 @@ debug-loader : $(GDB_SCRIPT)
 		-ex 'set tdesc filename target.xml' \
 		-ex 'target remote localhost:1234' \
 		-ex 'hb *0x7c00' \
+		-ex 'hb *0x7c19' \
+		-ex 'hb *0x7c37' \
+		-ex 'hb *0x7caa' \
 		-ex 'continue' \
 		-ex 'symbol $(BOOTLOADER_DIR)'
+debug-loader-32 :
+	gdb -ex 'target remote:1234' \
+		-ex 'hb *0x7ee6' \
+		-ex 'hb *0x9150' \
+		-ex 'hb *0x9ae7' \
+		-ex 'continue' \
+		-ex 'file $(BOOTLOADER_DIR)'
+
 debug :
-	gdb -ex 'file $(KERNEL_DIR)' \
-		-ex 'target remote:1234' \
+	gdb -ex 'target remote:1234' \
+		-ex 'file $(KERNEL_DIR)' \
 		-ex 'hb _start' \
 		-ex 'continue'
-
 clean :
 	@rm -rf ./target
