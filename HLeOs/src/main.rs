@@ -45,13 +45,13 @@ fn init_stack() {
     let mut tmp_p = 0x40b0 as *mut u64;
     unsafe {
         *tmp_p.offset(0) = 0x16003;
-        *tmp_p.offset(1) = 0x17003;
-        *tmp_p.offset(2) = 0x18003;
-        *tmp_p.offset(3) = 0x19003;
-        *tmp_p.offset(4) = 0x1a003;
-        *tmp_p.offset(5) = 0x1b003;
-        *tmp_p.offset(6) = 0x1c003;
-        *tmp_p.offset(7) = 0x1d003;
+        *tmp_p.offset(1) = 0x279003;
+        *tmp_p.offset(2) = 0x27a003;
+        *tmp_p.offset(3) = 0x27b003;
+        *tmp_p.offset(4) = 0x27c003;
+        *tmp_p.offset(5) = 0x27d003;
+        *tmp_p.offset(6) = 0x27e003;
+        *tmp_p.offset(7) = 0x27f003;
     }
 }
 
