@@ -1,37 +1,32 @@
 #![no_std] // don't link the Rust standard library
 #![no_main] // disable all Rust-level entry points
 
+use core::arch::asm;
 use core::panic::PanicInfo;
+mod etc;
 mod hleos;
 mod std;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    unsafe {
-        let mut page = 0x40b0 as *mut u64;
-        *page = 0x409003;
+    init_stack();
+    init_interrupt();
+    //etc::print_test();
+    //etc::wait_a_moment();
+    //std::io::clear();
+   
+    println!("hhihihiihihiihiihihih");
+    cursor_print!(24, 10, "HELLOO");
 
-        page = 0x40b8 as *mut u64;
-        *page = 0x406003;
+    etc::queue_test();
+    etc::wait_a_moment();
+    std::io::clear();
 
-        page = 0x40c0 as *mut u64;
-        *page = 0x407003;
-
-        page = 0x40c8 as *mut u64;
-        *page = 0x408003;
-
-        page = 0x40d0 as *mut u64;
-        *page = 0x40a003;
-    }
-
-    print_test();
-
-    println!("\nHello my name is Kang ChanU\n", "my student number is : ", 202020696);
-    println!("yes you are my friend too!");
+    println!("There is nothing");
 
     loop{
         let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
-        let ch : u8 = hleos::iostream::getchar();
+        let ch : u8 = hleos::iostream::getch();
         if ch == b'*' {
             vga.delete_char();
             continue;
@@ -40,100 +35,50 @@ pub extern "C" fn _start() -> ! {
     }
 }
 
-fn print_test() {
-    let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
+fn init_stack() {
+    unsafe { 
+        asm!("mov rbp, 0x10000201ff8",
+             "mov ax, 0x10",
+             "mov ss, ax"); 
+    }
 
-    vga.clear();
+    let mut tmp_p = 0x40b0 as *mut u64;
+    unsafe {
+        *tmp_p.offset(0) = 0x16003;
+        *tmp_p.offset(1) = 0x17003;
+        *tmp_p.offset(2) = 0x18003;
+        *tmp_p.offset(3) = 0x19003;
+        *tmp_p.offset(4) = 0x1a003;
+        *tmp_p.offset(5) = 0x1b003;
+        *tmp_p.offset(6) = 0x1c003;
+        *tmp_p.offset(7) = 0x1d003;
+    }
+}
 
-    vga.print_char(b'x');
-    vga.print_char(b'y');
-    vga.print_char(b'z');
 
-    for _i in 0..10000000 {}
+fn init_interrupt() {
+    let gdtr_base : *mut u16 = 0x16000 as *mut u16;
+    let idtr_base : *mut u32 = hleos::interrupt::init_gdt_tss(gdtr_base);
 
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
+    hleos::interrupt::init_idt(idtr_base);
 
-    vga.print_char(b'H');
-    for _i in 0..10000000 {}
-    vga.print_char(b'e');
-    for _i in 0..10000000 {}
-    vga.print_char(b'l');
-    for _i in 0..10000000 {}
-    vga.print_char(b'l');
-    for _i in 0..10000000 {}
-    vga.print_char(b'o');
-    for _i in 0..10000000 {}
-    vga.print_char(b'\n');
-    for _i in 0..10000000 {}
-    vga.print_char(b'w');
-    for _i in 0..10000000 {}
-    vga.print_char(b'o');
-    for _i in 0..10000000 {}
-    vga.print_char(b'r');
-    for _i in 0..10000000 {}
-    vga.print_char(b'l');
-    for _i in 0..10000000 {}
-    vga.print_char(b'd');
-    for _i in 0..10000000 {}
-    vga.print_char(b'!');
-    for _i in 0..10000000 {}
-    vga.print_char(b'\n');
-    for _i in 0..10000000 {}
-
-    vga.print_line(b"Q : What is... ");
-    vga.print_number(854952);
-    vga.print_line(b" plus ");
-    vga.print_number(32432);
-    vga.print_char(b'?');
-    for _i in 0..10000000 {}
-    vga.print_char(b'\n');
-    vga.print_line(b"A : ");
-    vga.print_number(854952 + 32432);
-    vga.print_line(b", sir. \n");
-    for _i in 0..100000000 {}
-
-    vga.print_line(b"Hello, I love study about computer science espicially, Operating system!!\n");
-    for _i in 0..100000000 {}
-    vga.delete_char();
-    vga.delete_line();
-    for _i in 0..10000000 {}
-    vga.print_line(b"Hello, This is my HLeOs. \n");
-    vga.print_line(b"I'm working on 3rd Chapter about printing something! \n");
-    vga.print_line(b"Visit my github, and blog for more information! \n");
-    vga.print_line(b"github : https://github.com/HLe4s/HLeOs \n");
-    vga.print_line(b"blog : https://www.hacking-yi.kro.kr \n");
-
-    println!(10, " + ", 324, " = ", 10 + 324);
-    vga.delete_char();
-    vga.delete_line();
-    println!();
-    println!(10, " + ", 324, " = ", 10 + 324);
-    vga.print_line(b"HAHAHAHAH, Hello, I love study about computer science espicially, Operating system!!\n");
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
-    vga.delete_char();
-    for _i in 0..10000000 {}
+    unsafe {
+        hleos::asm::lgdt(gdtr_base as u64);
+        hleos::asm::load_tss(0x28);
+        hleos::asm::lidt(idtr_base as u64);
+        hleos::asm::sgdt(0x16b00 as *mut u64);
+        hleos::asm::store_tss(0x16b10 as *mut u64);
+        hleos::asm::sidt(0x16b20 as *mut u64);
+    }
+    
+    hleos::timer::k_init_pit(1193 / 2, true);
+    hleos::interrupt::init_pic();
 }
 
 /// This function is called on panic.
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
-    vga.print_line(b"Panic_eccured!!\n");
+    vga.print_line(b"Panic_occured!!\n");
     loop {}
 }

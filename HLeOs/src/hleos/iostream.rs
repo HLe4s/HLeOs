@@ -1,4 +1,5 @@
-use core::arch::asm;
+use super::asm::kInPortByte;
+use super::asm::kOutPortByte;
 
 struct kKeyMappingEntryStruct {
     bNormalCode : u8,
@@ -32,24 +33,6 @@ pub fn kIsInputBufferFull() -> bool {
         true
     } else {
         false
-    }
-}
-
-pub fn kInPortByte(p : u16) -> u8 {
-    let mut ret : u8 = 0;
-    unsafe {
-        asm!("in al, dx",
-             out("al") ret,
-             in("dx") p);
-    }
-    ret
-}
-
-pub fn kOutPortByte(p : u16, d : u8) {
-    unsafe {
-        asm!("out dx, al", 
-             in("al") d, 
-             in("dx") p);
     }
 }
 
@@ -130,7 +113,7 @@ pub fn kActivateKeyboard() -> bool {
     }
 }
 
-pub fn getchar() -> u8{
+pub fn getch() -> u8{
     let mut key : u8 = 0;
 
     while !((key >= 0x10 && key <= 0x32) || key == 0x39 || key == 0x0E) {

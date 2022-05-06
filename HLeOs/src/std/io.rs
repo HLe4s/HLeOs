@@ -11,6 +11,13 @@ impl PrintLn for i32 {
     }
 }
 
+impl PrintLn for u32 {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_number(*self as i32);
+    }
+}
+
 impl PrintLn for u8 {
     fn print(&self) {
         let vga : &vga::VgaHandle = vga::get_vga_handle();
@@ -34,6 +41,21 @@ pub fn next_line() {
     vga.print_char(b'\n');
 }
 
+pub fn clear() {
+    let vga : &vga::VgaHandle = vga::get_vga_handle();
+    vga.clear();
+}
+
+pub fn set_cursor(x:u8, y:u8) {
+    let vga : &vga::VgaHandle = vga::get_vga_handle();
+    vga.set_cursor(x, y);
+}
+
+pub fn get_cursor() -> (u8, u8) {
+    let vga : &vga::VgaHandle = vga::get_vga_handle();
+    vga.get_cursor()
+}
+
 #[macro_export]
 macro_rules! println {
     () => {
@@ -52,5 +74,16 @@ macro_rules! print {
         $(
             crate::std::io::vs_println(&$arg);
         )*
+    };
+}
+#[macro_export]
+macro_rules! cursor_print {
+    ($x:literal, $y:literal, $($arg:expr), *)=> {
+		let (x, y) = std::io::get_cursor();
+		std::io::set_cursor($x, $y);
+        $(
+            crate::std::io::vs_println(&$arg);
+        )*
+		std::io::set_cursor(x, y);
     };
 }

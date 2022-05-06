@@ -3,9 +3,40 @@ pub struct VgaHandle{
     y : u8,
     def_attr : u8,
     cur_attr : u8,
+    cursor : bool,
 }
 
 impl VgaHandle {
+    pub fn is_cursor_visible(&self) -> bool {
+        self.cursor
+    }
+    pub fn cursor_visible(&self) {
+        unsafe {
+            vga_handle.print_char('|' as u8);
+            vga_handle.cursor = true;
+        }
+    }
+    pub fn get_cursor(&self) -> (u8, u8) {
+        return (self.x, self.y);
+    }
+    pub fn set_cursor(&self, x : u8, y : u8){
+        unsafe {
+            vga_handle.x = x;
+            vga_handle.y = y;
+        }
+    }
+    pub fn cursor_print_line(&self, x : u8, y : u8, s : &[u8]){
+        let (old_x, old_y) = self.get_cursor();
+        self.set_cursor(x, y);
+        self.print_line(s);
+        self.set_cursor(old_x, old_y);
+    }
+    pub fn cursor_invisible(&self) {
+        unsafe {
+            vga_handle.delete_char();
+            vga_handle.cursor = false;
+        }
+    }
     pub fn move_right_cursor(&mut self) -> bool {
         if self.x + 1 >= 0 && self.x + 1 < 80 {
             self.x = self.x + 1;
@@ -88,6 +119,10 @@ impl VgaHandle {
     pub fn print_char(&self, ch : u8) {
         let mut vga_buffer = 0xb8000 as *mut u8;
 
+        if self.cursor {
+            unsafe {vga_handle.cursor_invisible()};
+        }
+
         if self.valid_cursor() {
             if ch == b'\n' {
                 unsafe {
@@ -168,6 +203,10 @@ impl VgaHandle {
 			    }
             }
 		}
+        unsafe {
+            vga_handle.x = 0;
+            vga_handle.y = 0;
+        }
     }
 }
 
@@ -176,6 +215,7 @@ static mut vga_handle : VgaHandle = VgaHandle {
     y : 0,
     def_attr : 0x7,
     cur_attr : 0x7,
+    cursor : true,
 };
 
 pub fn get_vga_handle() -> &'static VgaHandle {
