@@ -1,5 +1,6 @@
 use core::panic;
 
+#[repr(C)]
 pub struct Queue {
     q_buffer : *mut u8,
     data_unit_size : u8,

@@ -1,5 +1,11 @@
 use super::super::asm::save_context;
 use super::super::asm::load_context;
+use super::super::thread::current_thread;
+use super::super::thread::copy_thread;
+use super::super::thread::ready_thread;
+use super::super::thread::pop_thread;
+use super::super::thread::load_thread;
+use super::super::thread::Thread;
 use super::super::super::println;
 use super::super::super::print;
 use super::super::super::cursor_print;
@@ -16,14 +22,14 @@ static mut timer_ms : u32 = 0;
 static mut timer_sec : u64 = 0;
 
 pub fn k_isr_timer(){
-    unsafe {asm!("push rax");}
+    unsafe { asm!("push rax"); };
     save_context();
     common_interrupt_handler(VECTOR_TIMER);
     load_context();
 }
 
 pub fn k_isr_keyboard(){
-    unsafe {asm!("push rax");}
+    unsafe { asm!("push rax"); };
     save_context();
     keyboard_handler(VECTOR_KEYBOARD);
     load_context();
@@ -144,7 +150,7 @@ pub fn k_isr_sfpe(){
 }
 
 pub fn k_isr_etc_interrupt() {
-    unsafe {asm!("push rax");}
+    unsafe { asm!("push rax"); }
     save_context();
     dummy_handler(255);
     load_context();
@@ -157,8 +163,16 @@ fn common_interrupt_handler(vector : u8){
     match vector
     {
         VECTOR_TIMER => {
+            let mut rsp : u64 = 0x0;
             unsafe {
                 if timer_ms >= 1000 {
+                    asm!("mov rax, rsp",
+                        out("rax") rsp);
+                    rsp += 0x70;
+
+                    copy_thread(current_thread(), rsp as *mut Thread);
+                    ready_thread(current_thread());
+
                     timer_ms = 0;
                     timer_sec += 1;
                     if timer_sec % 2 == 1 {
@@ -166,6 +180,11 @@ fn common_interrupt_handler(vector : u8){
                     } else if vga_handle.is_cursor_visible() {
                         vga_handle.cursor_invisible();
                     }
+                    
+                    timer_ms += 1;
+                    k_send_eoi_to_pic(vector - PIC_IRQSTARTVECTOR);
+
+                    load_thread(pop_thread());
                 }
                 timer_ms += 1;
             }

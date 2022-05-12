@@ -154,6 +154,29 @@ impl VgaHandle {
         self.print_char(b'0' + (n % 10) as u8);
     }
 
+    pub fn print_number_i64(&self, num : i64) {
+        let mut n = num;
+    
+        if n < 0 {
+            n = -n;
+        }
+
+
+        if n / 10 != 0 {
+            self.print_number_i64(n / 10);
+        }
+        self.print_char(b'0' + (n % 10) as u8);
+    }
+
+	pub fn print_number_u64(&self, num : u64) {
+        let mut n = num;
+
+        if n / 10 != 0 {
+            self.print_number_u64(n / 10);
+        }
+        self.print_char(b'0' + (n % 10) as u8);
+    }
+
     pub fn print_line(&self, s : &[u8]) {
        if self.valid_cursor() {
 			for (i, &byte) in s.iter().enumerate() {

@@ -14,14 +14,14 @@ KERNEL_DIR=$(WORKING_DIR)/target/x86_64-HLeos/debug/$(KERNEL)
 GDB_SCRIPT=./gdb_init_real_mode.txt
 BOOTLOADER_DIR=$(WORKING_DIR)/target/bootimage/bootloader/x86_64-bootloader/release/bootloader
 
-.PHONY : all, run, gdb, gdb-i386, clean debug-loader debug
+.PHONY : all, run, gdb, gdb-i386, clean debug-loader debug dump
 
 all : $(TARGET)
 	cargo bootimage $(Z_FLAGS) --target $(TARGET)
 
 run : $(IMAGE_DIR)
 	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
-	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -m 16G
+	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -m 2G
 
 gdb : $(IMAGE_DIR)
 	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
@@ -53,28 +53,11 @@ debug :
 	gdb -ex 'target remote:1234' \
 		-ex 'file $(KERNEL_DIR)' \
 		-ex 'hb _start' \
-		-ex 'hb HLeOs::hleos::interrupt::handler::k_isr_page_fault' \
 		-ex 'hb HLeOs::hleos::interrupt::handler::k_isr_timer' \
-		-ex 'hb HLeOs::hleos::interrupt::handler::k_isr_keyboard' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_divide_error' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_debug_exception' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_nmi_interrupt' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_breakpoint' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_overflow' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_bound_exceeded' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_invalid_opcode' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_device_not_available' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_double_fault' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_cso' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_invalid_tss' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_segment_not_present' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_stack_segment_fault' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_general_protection' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_etc_interrupt' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_fpu_error' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_alignment_check' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_machine_check' \
-		-ex 'b HLeOs::hleos::interrupt::handler::k_isr_sfpe' \
 		-ex 'continue'
+dump :
+	objdump -d target/x86_64-HLeos/debug/HLeOs > dump.obj
+
 clean :
 	@rm -rf ./target
+	@rm -rf ./dump.obj

@@ -86,7 +86,6 @@ pub fn init_idt(pidt : *mut u32){
 pub fn init_pic() {
     k_init_pic();
     k_mask_pic_interrupt(2);
-    k_enable_interrupt();
 }
 
 fn set_descriptor(dptr : *mut u32, typ : u32, s : bool, dpl : u32) -> *mut u32 {

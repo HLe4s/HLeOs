@@ -2,6 +2,14 @@ use super::hleos;
 use super::std;
 use super::println;
 use super::print;
+use super::hleos::asm;
+use super::std::bit_map::BitMap;
+use super::hleos::thread;
+use super::hleos::kmalloc;
+use super::hleos::thread::jobs;
+
+pub static mut th : u64 = 0x0;
+pub static mut hello : bool = false;
 
 pub fn wait_a_little_bit() {
     for _i in 0..10000000 {}
@@ -13,6 +21,47 @@ pub fn wait_a_moment() {
     }
 }
 
+pub fn thread_test() {
+    let t = thread::create_thread(jobs::dummy_main, kmalloc::stack_kmalloc(0xff0));
+
+    unsafe {
+        th = thread::save_thread(t) as u64;
+        if !hello {
+            thread::load_thread(thread::create_thread(jobs::dummy_main, kmalloc::stack_kmalloc(0xff0)));
+        }
+    }
+
+    for _i in 0..10 {
+        println!("Hello!");
+        wait_a_moment();
+    }
+} 
+
+pub fn bit_map_test() {
+    let len = 32;
+    let mut bits : u64 = 0x0;
+    let bit_map : BitMap = BitMap::new(&mut bits, len);
+
+    bit_map.set_bit(15);
+    bit_map.set_bit(30);
+
+    println!(bit_map.find_first(true));
+    bit_map.unset_bit(15);
+    println!(bit_map.find_first(false));
+
+    for i in 0..len {
+        print!(i, " : ");
+        print!(bit_map.is_set(i));
+
+        if i % 3 == 2 {
+            print!('\n');
+        } else if i % 3 == 2 {
+            print!("    ");
+        } else {
+            print!("    ");
+        }
+    }
+}
 
 pub fn print_test() {
     let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
@@ -87,3 +136,4 @@ pub fn queue_test() {
 
     println!("end!");
 }
+

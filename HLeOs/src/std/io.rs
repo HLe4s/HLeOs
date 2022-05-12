@@ -11,10 +11,50 @@ impl PrintLn for i32 {
     }
 }
 
+impl PrintLn for isize {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_number_i64(*self as i64);
+    }
+}
+
+impl PrintLn for u64 {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_number_u64(*self);
+    }
+}
+
+impl PrintLn for i64 {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_number_i64(*self);
+    }
+}
+
+impl PrintLn for char {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        vga.print_char(*self as u8);
+    }
+}
+
 impl PrintLn for u32 {
     fn print(&self) {
         let vga : &vga::VgaHandle = vga::get_vga_handle();
         vga.print_number(*self as i32);
+    }
+}
+
+impl PrintLn for bool {
+    fn print(&self) {
+        let vga : &vga::VgaHandle = vga::get_vga_handle();
+        if *self {
+			vga.print_str("true");
+		}
+		else {
+			vga.print_str("false");
+		}	
     }
 }
 
@@ -44,6 +84,11 @@ pub fn next_line() {
 pub fn clear() {
     let vga : &vga::VgaHandle = vga::get_vga_handle();
     vga.clear();
+}
+
+pub fn delete_a_char() {
+    let vga : &vga::VgaHandle = vga::get_vga_handle();
+    vga.delete_char();
 }
 
 pub fn set_cursor(x:u8, y:u8) {
