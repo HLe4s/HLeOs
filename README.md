@@ -71,11 +71,11 @@ HLeOs\
 
 please refer to Makefile file.
 
-make - build **HLeOs**
-make run - run **HLeOs** on qemu-system-x86_64
-make gdb - run **HLeOs** on qemu-system-x86_64 and remote debug. on tcp:1234
-make debug - debug **HLeOs** on qemu, (pair to make gdb)
-make dump - make disasmbled dump file.
+make - build **HLeOs** \
+make run - run **HLeOs** on qemu-system-x86_64 \
+make gdb - run **HLeOs** on qemu-system-x86_64 and remote debug. on tcp:1234 \
+make debug - debug **HLeOs** on qemu, (pair to make gdb) \
+make dump - make disasmbled dump file. 
 
 and other PHONY are in Makefile. good luck !
 
