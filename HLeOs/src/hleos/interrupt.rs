@@ -246,7 +246,7 @@ fn k_send_eoi_to_pic(irq_number : u8) {
 
 pub fn set_interrupt_flag(iF : bool) -> bool {
     let rflags = k_read_rflags();
-    let old_if = if rflags & 0x100 == 0 {false} else {true};
+    let old_if = if rflags & 0x200 == 0 {false} else {true};
 
     if iF {
         k_enable_interrupt();

@@ -3,6 +3,7 @@ use super::super::asm::k_enable_interrupt;
 use super::super::super::println;
 use super::super::super::std;
 use super::super::super::print;
+use super::super::super::cursor_print;
 use super::super::super::etc::wait_a_little_bit;
 use super::super::super::etc::wait_a_moment;
 use super::super::super::etc::hello;

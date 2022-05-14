@@ -16,10 +16,22 @@ static mut running_thread : *mut hleos::thread::Thread = 0x0 as *mut hleos::thre
 pub extern "C" fn _start() -> ! {
     // kmalloc init를 수행해야 하는데, 수행하지 않았다. 다음에 꼭 유의해서 수행해주길 바람.
     // ^^ bitmap을 0으로 초기화 해야함.
+    println!("\n  Initializing Stack ............................................  [    ]\n");
+    etc::wait_a_moment();
     init_stack();
-    init_thread();
-    init_interrupt();
+    cursor_print!(69, 1, "OK");
+    etc::wait_a_moment();
     //init_kmalloc();
+    println!("  Initializing thread ...........................................  [    ]\n");
+    etc::wait_a_moment();
+    init_thread();
+    cursor_print!(69, 3, "OK");
+    etc::wait_a_moment();
+    println!("  Initializing interrupt ........................................  [    ]\n");
+    etc::wait_a_moment();
+    init_interrupt();
+    cursor_print!(69, 5, "OK");
+    etc::wait_a_moment();
     
     unsafe { 
         hleos::thread::load_thread(running_thread as *mut hleos::thread::Thread);
@@ -69,6 +81,16 @@ fn init_stack() {
     hleos::asm::flush_tlb(0x1f000);
 }
 
+fn init_kmalloc() {
+    let kmalloc_addr = 0x8000000000 as *mut u8;
+
+    for i in 0..0x7f20 {
+        unsafe {
+            *kmalloc_addr.offset(i) = 0x0;
+        }
+    }
+}
+
 fn init_thread() {
     let ready_queue_ptr : *mut std::queue::Queue = hleos::kmalloc::kmalloc(size_of::<std::queue::Queue>() as u64);
     let ready_queue_buffer : *mut u8 = hleos::kmalloc::kmalloc(0x40);
@@ -80,6 +102,8 @@ fn init_thread() {
         hleos::thread::ready_thread(hleos::thread::create_thread(hleos::thread::jobs::print_hello,
                                                                  hleos::kmalloc::stack_kmalloc(0xff0)));
         hleos::thread::ready_thread(hleos::thread::create_thread(hleos::thread::jobs::print_hi,
+                                                                 hleos::kmalloc::stack_kmalloc(0xff0)));
+        hleos::thread::ready_thread(hleos::thread::create_thread(hleos::thread::jobs::getch_main,
                                                                  hleos::kmalloc::stack_kmalloc(0xff0)));
         running_thread = hleos::thread::create_thread(hleos::thread::jobs::init, 
                                                       hleos::kmalloc::stack_kmalloc(0xff0));

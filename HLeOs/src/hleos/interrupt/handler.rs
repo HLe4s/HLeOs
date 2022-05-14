@@ -165,7 +165,7 @@ fn common_interrupt_handler(vector : u8){
         VECTOR_TIMER => {
             let mut rsp : u64 = 0x0;
             unsafe {
-                if timer_ms >= 1000 {
+                if timer_ms >= 100 {
                     asm!("mov rax, rsp",
                         out("rax") rsp);
                     rsp += 0x70;
@@ -175,7 +175,7 @@ fn common_interrupt_handler(vector : u8){
 
                     timer_ms = 0;
                     timer_sec += 1;
-                    if timer_sec % 2 == 1 {
+                    if timer_sec % 20 < 10 {
                         vga_handle.cursor_visible();
                     } else if vga_handle.is_cursor_visible() {
                         vga_handle.cursor_invisible();

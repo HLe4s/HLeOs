@@ -11,52 +11,59 @@ impl VgaHandle {
         self.cursor
     }
     pub fn cursor_visible(&self) {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         unsafe {
             vga_handle.print_char('|' as u8);
             vga_handle.cursor = true;
         }
+        crate::hleos::interrupt::set_interrupt_flag(old);
     }
     pub fn get_cursor(&self) -> (u8, u8) {
         return (self.x, self.y);
     }
     pub fn set_cursor(&self, x : u8, y : u8){
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         unsafe {
             vga_handle.x = x;
             vga_handle.y = y;
         }
-    }
-    pub fn cursor_print_line(&self, x : u8, y : u8, s : &[u8]){
-        let (old_x, old_y) = self.get_cursor();
-        self.set_cursor(x, y);
-        self.print_line(s);
-        self.set_cursor(old_x, old_y);
+        crate::hleos::interrupt::set_interrupt_flag(old);
     }
     pub fn cursor_invisible(&self) {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         unsafe {
             vga_handle.delete_char();
             vga_handle.cursor = false;
         }
+        crate::hleos::interrupt::set_interrupt_flag(old);
     }
     pub fn move_right_cursor(&mut self) -> bool {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         if self.x + 1 >= 0 && self.x + 1 < 80 {
             self.x = self.x + 1;
+            crate::hleos::interrupt::set_interrupt_flag(old);
             true
         } else if self.x + 1 >= 80 {
             if self.y + 1 >= 0 && self.y + 1 < 25 {
                 self.y = self.y + 1;
                 self.x = 0;
+                crate::hleos::interrupt::set_interrupt_flag(old);
                 true
             } else {
+                crate::hleos::interrupt::set_interrupt_flag(old);
                 false
             }
         } else {
+            crate::hleos::interrupt::set_interrupt_flag(old);
             false
         }
     }
 
     pub fn move_left_cursor(&mut self) -> bool {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         if self.x > 0 {
             self.x = self.x - 1;
+            crate::hleos::interrupt::set_interrupt_flag(old);
             true
         } else {
             if self.y > 0 {
@@ -70,27 +77,35 @@ impl VgaHandle {
                         }
                     }
                 }
+                crate::hleos::interrupt::set_interrupt_flag(old);
                 true
             } else {
+                crate::hleos::interrupt::set_interrupt_flag(old);
                 false
             }
         }
     }
 
     pub fn move_down_cursor(&mut self) -> bool {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         if self.y + 1 >= 0 && self.y + 1 < 25 {
             self.y = self.y + 1;
+            crate::hleos::interrupt::set_interrupt_flag(old);
             true
         } else {
+            crate::hleos::interrupt::set_interrupt_flag(old);
             false
         }
     }
 
     pub fn move_up_cursor(&mut self) -> bool {
+        let old = crate::hleos::interrupt::set_interrupt_flag(false);
         if self.y > 0 {
             self.y = self.y - 1;
+            crate::hleos::interrupt::set_interrupt_flag(old);
             true
         } else {
+            crate::hleos::interrupt::set_interrupt_flag(old);
             false
         }
     }

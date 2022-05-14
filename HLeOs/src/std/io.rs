@@ -104,13 +104,13 @@ pub fn get_cursor() -> (u8, u8) {
 #[macro_export]
 macro_rules! println {
     () => {
-        std::io::next_line();
+        crate::std::io::next_line();
     };
     ($($arg:expr), *)=> {
         $(
             crate::std::io::vs_println(&$arg);
         )*
-        std::io::next_line();
+        crate::std::io::next_line();
     };
 }
 #[macro_export]
@@ -124,11 +124,19 @@ macro_rules! print {
 #[macro_export]
 macro_rules! cursor_print {
     ($x:literal, $y:literal, $($arg:expr), *)=> {
-		let (x, y) = std::io::get_cursor();
-		std::io::set_cursor($x, $y);
+		let (x, y) = crate::std::io::get_cursor();
+		crate::std::io::set_cursor($x, $y);
         $(
             crate::std::io::vs_println(&$arg);
         )*
-		std::io::set_cursor(x, y);
+		crate::std::io::set_cursor(x, y);
+    };
+	($x:expr, $y:expr, $($arg:expr), *)=> {
+        let (x, y) = crate::std::io::get_cursor();
+        crate::std::io::set_cursor($x, $y);
+        $(
+            crate::std::io::vs_println(&$arg);
+        )*
+        crate::std::io::set_cursor(x, y);
     };
 }
