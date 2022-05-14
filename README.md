@@ -16,7 +16,7 @@ If you want running **HLeOs** on your PC. you can use "Win32 disk imager" progra
 
 ## Files
 
-HLeOs/\
+HLeOs\
 ├── Cargo.lock\
 ├── Cargo.toml\
 ├── Makefile\
@@ -85,6 +85,7 @@ very thanks to writer of this book, for writting good book \
 <img src="http://image.yes24.com/goods/65061299/XL" width="50%" height="50%"/>
 
 also refered to [AMD64 Architecture Programmer’s Manual Volume 2: System Programming](https://www.amd.com/system/files/TechDocs/24593.pdf)
+and, [https://os.phil-opp.com/freestanding-rust-binary/](https://os.phil-opp.com/freestanding-rust-binary/) => Thanks for good quality of docs.
 
 Deprecated README.md ( ~ 2022.05.13 )
 ----------------------------------------------
