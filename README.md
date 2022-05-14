@@ -5,11 +5,11 @@
 made by HLe4s, a system programmer and a student in [sslab](https://sslab.ajou.ac.kr/), Ajou Univ.
 
 ## Environment.
-**HLeOs** can be run on qemu-system-x86_64, and on amd64 PC.
-but, It's code have some randomness.. (see init kmalloc,in src/main.c)
+**HLeOs** can be run on qemu-system-x86_64, and on amd64 PC. \
+but, It's code have some randomness.. (see init kmalloc,in src/main.c) \
 so An amd64 PC may not run **HLeOs**
 
-If you want running **HLeOs on your PC. you can use "Win32 disk imager" program.
+If you want running **HLeOs** on your PC. you can use "Win32 disk imager" program.
 
 ## Prerequisite
 **HLeOs** is programed by Rust language. so you should prepare rust cargo. (nightly version)
