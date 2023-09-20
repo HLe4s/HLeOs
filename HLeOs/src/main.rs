@@ -115,7 +115,7 @@ fn init_thread() {
 fn init_interrupt() {
     let gdtr_base : *mut u16 = 0x16000 as *mut u16;
     let idtr_base : *mut u32 = hleos::interrupt::init_gdt_tss(gdtr_base);
-
+   
     hleos::interrupt::init_idt(idtr_base);
 
     unsafe {
@@ -135,6 +135,6 @@ fn init_interrupt() {
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     let vga : &hleos::vga::VgaHandle = hleos::vga::get_vga_handle();
-    vga.print_line(b"Panic_occured!!\n");
+    vga.print_line(b"Panic_occured!! ");
     loop {}
 }

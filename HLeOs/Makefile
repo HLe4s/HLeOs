@@ -52,8 +52,7 @@ debug-loader-32 :
 debug :
 	gdb -ex 'target remote:1234' \
 		-ex 'file $(KERNEL_DIR)' \
-		-ex 'hb _start' \
-		-ex 'hb HLeOs::hleos::interrupt::handler::k_isr_timer' \
+		-ex 'hb load_thread' \
 		-ex 'continue'
 dump :
 	objdump -d target/x86_64-HLeos/debug/HLeOs > dump.obj

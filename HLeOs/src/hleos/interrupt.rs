@@ -13,41 +13,43 @@ const PIC_SLAVE_PORT2: u16 = 0xA1;
 const PIC_IRQSTARTVECTOR: u8 = 0x20;
 
 pub fn init_gdt_tss(gdtr : *mut u16) -> *mut u32 {
-    let ist : [*mut u64; 8] = [ 0x17ff0 as *mut u64,
-                                0x18ff0 as *mut u64,
-                                0x19ff0 as *mut u64,
-                                0x1aff0 as *mut u64,
-                                0x1bff0 as *mut u64,
-                                0x1cff0 as *mut u64,
-                                0x1dff0 as *mut u64,
-                                0x0 as *mut u64];
+    let ist : [u64; 8] = [ 0x17ff0,
+                                0x18ff0,
+                                0x19ff0,
+                                0x1aff0,
+                                0x1bff0,
+                                0x1cff0,
+                                0x1dff0,
+                                0x0];
     unsafe {
         *gdtr = 0x38 - 1;
-        let mut gdtr : *mut u32 = (gdtr.offset(0x1) as *mut u32);
-        *gdtr = (gdtr as u32 + 0xe);
-        gdtr = (gdtr as u32 + 0x6) as *mut u32;
-        *gdtr = 0x0;
-        gdtr = (gdtr as u32 + 0x8) as *mut u32;
+        *gdtr.offset(0x1) = ((gdtr as u64 + 0x10) & 0xffff) as u16;
+        *gdtr.offset(0x2) = (((gdtr as u64 + 0x10) & 0xffff0000) >> 16) as u16;
+        *gdtr.offset(0x3) = (((gdtr as u64 + 0x10) & 0xffff00000000) >> 32) as u16;
+        *gdtr.offset(0x4) = 0x0;
 
+        let mut gdtr = (gdtr as u32 + 0x10) as *mut u32;
         let mut gdtr = set_null_descriptor(gdtr);
         let mut gdtr = set_descriptor(gdtr, 0xA, true, 0);
         let mut gdtr = set_descriptor(gdtr, 0x2, true, 0);
         let mut gdtr = set_descriptor(gdtr, 0xA, true, 3);
         let mut gdtr = set_descriptor(gdtr, 0x2, true, 3);
-        let mut gdtr = set_tss_descriptor(gdtr, unsafe{ gdtr.offset(0x4) as u64 }, 104 - 1, 0);
+        let mut gdtr = (set_tss_descriptor(gdtr, unsafe{ gdtr.offset(0x4) as u64 }, 104 - 1, 0) as u64 + 0x4);
         let mut gdtr : u64 = set_tss(gdtr as *mut u32, &ist) as u64;
-        let mut gdtr = gdtr + gdtr % 0x10;
+        let mut gdtr : u64 = (gdtr & (!0xf)) + 0x10;
         gdtr as *mut u32
     }
 }
 
-pub fn init_idt(pidt : *mut u32){
+pub fn init_idt(mut pidt : *mut u32){
     unsafe {
+        let idt_base : u64 = pidt as u64 + 0x10;
         *pidt = 0x10 * 100 - 1;
-        let mut pidt = (pidt as u64 + 2) as *mut u64;
+        *pidt |= ((idt_base & 0xffff) << 16) as u32;
+        *pidt.offset(0x1) = ((idt_base & 0xffffffff0000) >> 16) as u32;
+        *pidt.offset(0x2) = 0x0;
 
-        *pidt = (pidt as u64) + 0xe;
-        let mut pidt = *pidt as *mut u32;
+        let mut pidt = idt_base as *mut u32;
 
         pidt = set_idt_gate_descriptor(pidt, handler::k_isr_divide_error, 0x8, 1, 0, false);
         pidt = set_idt_gate_descriptor(pidt, handler::k_isr_debug_exception, 0x8, 2, 0, false);
@@ -146,10 +148,10 @@ fn set_null_descriptor(dptr : *mut u32) -> *mut u32 {
     }
 }
 
-fn set_tss(dptr : *mut u32, ist : &[*mut u64]) -> *mut u32 {
+fn set_tss(dptr : *mut u32, ist : &[u64]) -> *mut u32 {
     let mut cnt : isize = 0;
-    let mut dp : *mut u64;
     unsafe {
+        let dp : *mut u64 = dptr.offset(0x9) as *mut u64;
         *dptr.offset(0x0) = 0x0;
         *dptr.offset(0x1) = 0x0;
         *dptr.offset(0x2) = 0x0;
@@ -174,10 +176,8 @@ fn set_tss(dptr : *mut u32, ist : &[*mut u64]) -> *mut u32 {
         *dptr.offset(0x15) = 0x0;
         *dptr.offset(0x16) = 0x0;
 
-        dp = dptr.offset(0x9) as *mut u64;
-
-        while ist[cnt as usize] as u64 != 0x0 {
-            *dp.offset(cnt) = ist[cnt as usize] as u64;
+        while ist[cnt as usize] != 0x0 {
+            *dp.offset(cnt) = ist[cnt as usize];
             cnt += 1;
         }
 
