@@ -20,3 +20,6 @@ panic = "abort"
 
 [dependencies]
 bootloader = "0.9.8"
+
+[build-dependencies]
+cc = "1.0"

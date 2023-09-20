@@ -53,3 +53,7 @@ pub fn dummy_main() {
 
     }
 }
+
+extern "C" {
+    pub fn dummy_c();
+}

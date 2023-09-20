@@ -21,7 +21,7 @@ pub extern "C" fn _start() -> ! {
     init_stack();
     cursor_print!(69, 1, "OK");
     etc::wait_a_moment();
-    //init_kmalloc();
+    init_kmalloc();
     println!("  Initializing thread ...........................................  [    ]\n");
     etc::wait_a_moment();
     init_thread();
@@ -82,9 +82,9 @@ fn init_stack() {
 }
 
 fn init_kmalloc() {
-    let kmalloc_addr = 0x8000000000 as *mut u8;
+    let kmalloc_addr = 0x8000000000 as *mut u64;
 
-    for i in 0..0x7f20 {
+    for i in 0..0x7f2 {
         unsafe {
             *kmalloc_addr.offset(i) = 0x0;
         }
@@ -104,6 +104,8 @@ fn init_thread() {
         hleos::thread::ready_thread(hleos::thread::create_thread(hleos::thread::jobs::print_hi,
                                                                  hleos::kmalloc::stack_kmalloc(0xff0)));
         hleos::thread::ready_thread(hleos::thread::create_thread(hleos::thread::jobs::getch_main,
+                                                                 hleos::kmalloc::stack_kmalloc(0xff0)));
+        hleos::thread::ready_thread(hleos::thread::create_thread_c(hleos::thread::jobs::dummy_c,
                                                                  hleos::kmalloc::stack_kmalloc(0xff0)));
         running_thread = hleos::thread::create_thread(hleos::thread::jobs::init, 
                                                       hleos::kmalloc::stack_kmalloc(0xff0));

@@ -211,6 +211,43 @@ pub fn create_thread(entry_point : fn(), stack : *mut u64) -> *mut Thread {
     th
 }
 
+pub fn create_thread_c(entry_point : unsafe extern "C" fn(), stack : *mut u64) -> *mut Thread {
+    let th = kmalloc::kmalloc(size_of::<Thread>() as u64);
+    unsafe {
+        ptr::write(th, 
+            Thread{
+                ss : 0x10,
+                rsp : stack as u64,
+                rflags : 0x0,
+                cs : 0x8,
+                rip : entry_point as u64,
+                pad : 0x0,
+                pad2 : 0x0,
+				rbp : stack as u64,
+                rax : 0x0,
+                rbx : 0x0,
+                rcx : 0x0,
+                rdx : 0x0,
+                rdi : 0x0,
+                rsi : 0x0,
+                r8 : 0x0,
+                r9 : 0x0,
+                r10 : 0x0,
+                r11 : 0x0,
+                r12 : 0x0,
+                r13 : 0x0,
+                r14 : 0x0,
+                r15 : 0x0,
+                ds : 0x10,
+                es : 0x10,
+                fs : 0x0,
+                gs : 0x0,
+                th_addr : th as u64,
+            });
+    }
+    th
+}
+
 pub fn copy_thread(dst : *mut Thread, src : *mut Thread) -> *mut Thread {
 	unsafe {
         let mut tmp = ptr::read(src);
