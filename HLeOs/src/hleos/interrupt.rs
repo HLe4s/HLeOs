@@ -34,7 +34,7 @@ pub fn init_gdt_tss(gdtr : *mut u16) -> *mut u32 {
         let mut gdtr = set_descriptor(gdtr, 0x2, true, 0);
         let mut gdtr = set_descriptor(gdtr, 0xA, true, 3);
         let mut gdtr = set_descriptor(gdtr, 0x2, true, 3);
-        let mut gdtr = (set_tss_descriptor(gdtr, unsafe{ gdtr.offset(0x4) as u64 }, 104 - 1, 0) as u64 + 0x4);
+        let mut gdtr = (set_tss_descriptor(gdtr, unsafe{ gdtr.offset(0x7) as u64 }, 104 - 1, 0) as u64 + 0xc);
         let mut gdtr : u64 = set_tss(gdtr as *mut u32, &ist) as u64;
         let mut gdtr : u64 = (gdtr & (!0xf)) + 0x10;
         gdtr as *mut u32
@@ -133,7 +133,7 @@ fn set_tss_descriptor(dptr : *mut u32, addr : u64, size : u32, dpl : u32) -> *mu
         *dptr.offset(0x1) |= ((addr_lo & 0xff0000) >> 16);
         *dptr.offset(0x1) |= (addr_lo & 0xff000000);
         *dptr.offset(0x1) &= 0xff0fffff;
-        *dptr.offset(0x1) |= 0x00800000;
+        *dptr.offset(0x1) |= 0x00900000;
 
         *dptr.offset(0x2) = (addr_hi);
         dptr.offset(0x4)

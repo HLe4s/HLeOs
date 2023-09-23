@@ -1,6 +1,32 @@
 use core::arch::asm;
 
 #[inline]
+pub fn wrmsr(msr : u32, value : u64)
+{
+    let low : u32 = (value & 0xffffffff) as u32;
+    let high : u32 = ((value & 0xffffffff00000000) >> 32) as u32;
+
+    unsafe {
+        asm!("wrmsr", in("eax") low, in("edx") high, in("ecx") msr);
+    }
+}
+
+#[inline]
+pub fn rdmsr(msr : u32) -> u64
+{
+    let mut value : u64 = 0;
+    let mut low : u32;
+    let mut high : u32;
+    
+    unsafe {
+        asm!("rdmsr", in("ecx") msr, out("eax") low, out("edx") high);
+    }
+    value = low as u64;
+    value |= (high as u64) << 32;
+    value
+}
+
+#[inline]
 pub fn load_tss(sel : u32){
     unsafe {
         asm!("ltr {0:x}", in(reg) sel);
@@ -128,18 +154,21 @@ pub fn load_context(){
     }
 }
 
+#[inline(always)]
 pub fn k_enable_interrupt(){
     unsafe {
         asm!("sti");
     }
 }
 
+#[inline(always)]
 pub fn k_disable_interrupt(){
     unsafe {
         asm!("cli");
     }
 }
 
+#[inline(always)]
 pub fn k_read_rflags() -> usize{
     let mut ret : usize = 0x0;
     unsafe {

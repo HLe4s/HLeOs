@@ -2,6 +2,7 @@ typedef unsigned short uint16_t;
 
 void dummy_c(void)
 {
+	int a= 1, b = 0, c = a/b;
 	uint16_t * vgr = 0xb8000;
 	asm volatile ("sti"); // to enable interrupt.
 

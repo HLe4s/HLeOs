@@ -11,7 +11,7 @@ pub fn kmalloc<T>(size : u64) -> *mut T {
     let hbit_map = BitMap::new(heap_base, 130055);
     let size = (size + 0xf) / 0x10;
 
-    let chk = find_continue_false(&hbit_map, size);
+    let chk = find_continuous_false(&hbit_map, size);
 
     if chk != hbit_map.len() {
         let mut i : u64 = 0x0;
@@ -34,7 +34,7 @@ pub fn stack_kmalloc<T>(size : u64) -> *mut T {
     let hbit_map = BitMap::new(heap_base, 130055);
     let size = (size + 0xf) / 0x10;
 
-    let chk = find_continue_false(&hbit_map, size);
+    let chk = find_continuous_false(&hbit_map, size);
 
     if chk != hbit_map.len() {
         let mut i : u64 = 0x0;
@@ -65,7 +65,7 @@ pub fn free<T>(chk : *mut T, size : u64) -> bool {
     true
 }
 
-pub fn find_continue_false(hbit_map : &BitMap, num : u64) -> u64 {
+pub fn find_continuous_false(hbit_map : &BitMap, num : u64) -> u64 {
     let mut i : u64 = 0x0;
     let mut tmp : u64 = num;
     let mut first : u64 = hbit_map.len();

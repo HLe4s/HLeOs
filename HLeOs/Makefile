@@ -52,7 +52,7 @@ debug-loader-32 :
 debug :
 	gdb -ex 'target remote:1234' \
 		-ex 'file $(KERNEL_DIR)' \
-		-ex 'hb load_thread' \
+		-ex 'hb *0x203eac' \
 		-ex 'continue'
 dump :
 	objdump -d target/x86_64-HLeos/debug/HLeOs > dump.obj

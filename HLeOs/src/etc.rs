@@ -11,6 +11,10 @@ use super::hleos::thread::jobs;
 pub static mut th : u64 = 0x0;
 pub static mut hello : bool = false;
 
+extern "C" {
+    pub fn memcpy(dst : *mut u8, src : *mut u8, n : i32);
+}
+
 pub fn wait_a_little_bit() {
     for _i in 0..10000000 {}
 }

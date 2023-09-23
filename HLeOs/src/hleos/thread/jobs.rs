@@ -10,8 +10,8 @@ use super::super::super::etc::hello;
 use super::super::super::etc::th;
 
 pub fn init() {
-    println!("init job activated");
     k_enable_interrupt();
+    println!("init job activated");
     loop {
         wait_a_moment();
         wait_a_moment();

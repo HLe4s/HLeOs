@@ -6,6 +6,7 @@ use super::kmalloc;
 use core::mem::size_of;
 use core::ptr;
 use super::super::std::queue;
+use super::super::etc::memcpy;
 
 pub mod jobs;
 
@@ -250,9 +251,7 @@ pub fn create_thread_c(entry_point : unsafe extern "C" fn(), stack : *mut u64) -
 
 pub fn copy_thread(dst : *mut Thread, src : *mut Thread) -> *mut Thread {
 	unsafe {
-        let mut tmp = ptr::read(src);
-        tmp.th_addr = dst as u64;
-		ptr::write(dst, tmp);
+		memcpy(dst as *mut u8, src as *mut u8, size_of::<Thread>() as i32);
 	}
 	dst
 }
