@@ -21,9 +21,12 @@ const VECTOR_KEYBOARD : u8 = 0x21;
 static mut timer_ms : u32 = 0;
 static mut timer_sec : u64 = 0;
 
+static mut saved_context_ptr : u64 = 0x0;
+
 pub fn k_isr_timer(){
     unsafe { asm!("push rax"); };
     save_context();
+    unsafe { asm!("mov rax, rsp", out("rax") saved_context_ptr); };
     common_interrupt_handler(VECTOR_TIMER);
     load_context();
 }
@@ -163,14 +166,9 @@ fn common_interrupt_handler(vector : u8){
     match vector
     {
         VECTOR_TIMER => {
-            let mut rsp : u64 = 0x0;
             unsafe {
                 if timer_ms >= 100 {
-                    asm!("mov rax, rsp",
-                        out("rax") rsp);
-                    rsp += 0x70;
-
-                    copy_thread(current_thread(), rsp as *mut Thread);
+                    copy_thread(current_thread(), (saved_context_ptr - 0xc) as *mut Thread);
                     ready_thread(current_thread());
 
                     timer_ms = 0;
