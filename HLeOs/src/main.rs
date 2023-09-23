@@ -17,21 +17,21 @@ pub extern "C" fn _start() -> ! {
     // kmalloc init를 수행해야 하는데, 수행하지 않았다. 다음에 꼭 유의해서 수행해주길 바람.
     // ^^ bitmap을 0으로 초기화 해야함.
     println!("\n  Initializing Stack ............................................  [    ]\n");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
     init_stack();
     cursor_print!(69, 1, "OK");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
     init_kmalloc();
     println!("  Initializing thread ...........................................  [    ]\n");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
     init_thread();
     cursor_print!(69, 3, "OK");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
     println!("  Initializing interrupt ........................................  [    ]\n");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
     init_interrupt();
     cursor_print!(69, 5, "OK");
-    //etc::wait_a_moment();
+    etc::wait_a_moment();
 
     unsafe { 
         hleos::thread::load_thread(running_thread as *mut hleos::thread::Thread);
