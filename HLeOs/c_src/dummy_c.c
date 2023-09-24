@@ -1,4 +1,4 @@
-typedef unsigned short uint16_t;
+#include <types.h>
 
 void dummy_c(void)
 {
