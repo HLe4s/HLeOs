@@ -144,3 +144,12 @@ How to debug loader
 3. in another, type "make debug-loader"
 4. debug ! # file command makes error :(
  ++ you can make symbol by using 'symbol' command
+
+## Trouble Shooting (2024. 02. 22)
+if you find an error like this "error: data-layout for target `x86_64-bootloader-1980719571926610705`, `e-m:e-i64:64-f80:128-n8:16:32:64-S128`, differs from LLVM target's `x86_64-unknown-none-gnu` default layout, `e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128`". I recommand you do one of two ways below.
+1. try change the version of bootloader in Cargo.toml to 0.9.27 from 0.9.8 and make
+2. try change the version of bootloader in Cargo.toml to 0.11 from 0.9.8 and make (this's going to make an another error but wait) and change the version to 0.9.8 again and make.
+I solved this error one of these.
+I assume this occured by version issue.
+
+I don't recommend you run this as a root. 
