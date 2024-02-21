@@ -3,7 +3,8 @@ Z_FLAGS=-Z build-std=core,compiler_builtins \
 
 TARGET=x86_64-HLeos.json
 
-WORKING_DIR=/home/asss8593/lab/HLeOs/HLeOs # Your Home Directory
+# Your Working Directory
+WORKING_DIR=/home/asss8593/lab/HLeOs/HLeOs
 
 IMAGE=bootimage-HLeOs.bin
 KERNEL=HLeOs 
