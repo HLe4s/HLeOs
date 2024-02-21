@@ -26,7 +26,7 @@ If you want running **HLeOs** on your PC. you can use "Win32 disk imager" progra
 
 ### commands for quick-start
 * git clone https://github.com/HLe4s/HLeOs.git
-* curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+* curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh && source "$HOME/.cargo/env"
 * cd HLeOs/HLeOs
 * rustup override set nightly
 * cargo install bootimage
