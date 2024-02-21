@@ -14,7 +14,7 @@ If you want running **HLeOs** on your PC. you can use "Win32 disk imager" progra
 ## QUICK START (2024. 02. 22)
 
 ### requirements
-* apt install build-essential cmake curl make vim
+* apt install build-essential cmake curl make vim git
 
 1. clone this git 
 2. install cargo, rustup etc
