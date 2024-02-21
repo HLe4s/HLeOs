@@ -11,6 +11,28 @@ so An amd64 PC may not run **HLeOs**
 
 If you want running **HLeOs** on your PC. you can use "Win32 disk imager" program.
 
+## QUICK START (2024. 02. 22)
+
+#### requirements
+* apt install build-essential cmake curl make vim
+
+1. clone this git 
+2. install cargo, rustup etc
+3. install and override rust nightly at "<working directory>/HLeOs/HLeOs"
+4. install bootimage
+5. add rust-src
+6. add llvm-tools-preview
+6. make
+
+* git clone https://github.com/HLe4s/HLeOs.git
+* curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+* cd HLeOs/HLeOs
+* rustup override set nightly
+* cargo install bootimage
+* rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+* rustup component add llvm-tools-preview
+* make
+
 ## Prerequisite
 **HLeOs** is programed by Rust language. so you should prepare rust cargo. (nightly version)
 
