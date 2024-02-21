@@ -13,7 +13,7 @@ If you want running **HLeOs** on your PC. you can use "Win32 disk imager" progra
 
 ## QUICK START (2024. 02. 22)
 
-#### requirements
+### requirements
 * apt install build-essential cmake curl make vim
 
 1. clone this git 
@@ -24,6 +24,7 @@ If you want running **HLeOs** on your PC. you can use "Win32 disk imager" progra
 6. add llvm-tools-preview
 6. make
 
+### commands for quick-start
 * git clone https://github.com/HLe4s/HLeOs.git
 * curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 * cd HLeOs/HLeOs
