@@ -3,7 +3,7 @@ Z_FLAGS=-Z build-std=core,compiler_builtins \
 
 TARGET=x86_64-HLeos.json
 
-WORKING_DIR=/home/asss8593/lab/HLeOs/HLeOs
+WORKING_DIR=/home/asss8593/lab/HLeOs/HLeOs # Your Home Directory
 
 IMAGE=bootimage-HLeOs.bin
 KERNEL=HLeOs 
@@ -20,15 +20,15 @@ all : $(TARGET)
 	cargo bootimage $(Z_FLAGS) --target $(TARGET)
 
 run : $(IMAGE_DIR)
-	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
+	sudo xauth add `xauth -f $(HOME)/.Xauthority list|tail -1`
 	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -m 2G
 
 gdb : $(IMAGE_DIR)
-	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
+	sudo xauth add `xauth -f $(HOME)/.Xauthority list|tail -1`
 	sudo qemu-system-x86_64 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -s -S -m 16G
 
 gdb-i386 : $(IMAGE_DIR)
-	sudo xauth add `xauth -f /home/asss8593/.Xauthority list|tail -1`
+	sudo xauth add `xauth -f $(HOME)/.Xauthority list|tail -1`
 	sudo qemu-system-i386 -drive format=raw,file=$(IMAGE_DIR) -enable-kvm -s -S -m 16G
 
 debug-loader : $(GDB_SCRIPT)
